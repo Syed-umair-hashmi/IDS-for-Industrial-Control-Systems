@@ -24,17 +24,24 @@ If the deviation exceeds a defined threshold, the observation is flagged as an a
 
 ## Pipeline Architecture
 
-Normal ICS data
-      ↓
-Preprocessing + Feature Extraction
-      ↓
+```
+Normal ICS Data
+      │
+      ▼
+Preprocessing & Feature Extraction
+      │
+      ▼
 Train Anomaly Detection Model
-      ↓
-New Incoming ICS Observations
-      ↓
+      │
+      ▼
+Incoming ICS Observations
+      │
+      ▼
 Deviation Score Calculation
-      ↓
+      │
+      ▼
 Normal / Anomaly Classification
+```
 
 ## Key Concept
 
