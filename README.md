@@ -1,48 +1,85 @@
 # ICS Anomaly Detection
 
-## Overview
-
-This project implements a machine learning–based anomaly detection system for Industrial Control Systems (ICS). The goal is to model normal system behavior and detect deviations that may indicate cyberattacks or abnormal process activity.
+## Description
 
 Industrial Control Systems operate critical infrastructure such as water treatment plants, power grids, and manufacturing facilities. Because these systems typically follow predictable and deterministic patterns, abnormal behavior can often indicate system faults, sensor manipulation, or malicious activity.
 
-To address this, the model is trained on normal ICS operational data to learn how the system typically behaves. Incoming observations are then compared against this learned baseline to determine whether they represent normal operation or a potential anomaly.
-We will use normal ICS Data to teach a model how a system usually behaves. We will then monitor new data for any system inconsistencies and if the new behavior differs enough from the learned normal pattern, we would mark it as anomalous or potentially malicious for safety concerns.
+This project implements an anomaly-based intrusion detection system (IDS) for industrial control systems using the Secure Water Treatment (SWaT) dataset. The goal is to detect cyber-attacks by modeling normal system behavior and identifying deviations in sensor and actuator data, simulating how attackers may affect ICS systems.
 
-## Detection Approach
+The detection pipeline includes feature engineering for sensor dynamics and actuator switching behavior, followed by anomaly detection using Isolation Forest and One-Class Support Vector Machine (SVM) models.
 
-The system follows an anomaly detection pipeline:
+The models are evaluated using security-relevant metrics including attack detection rate and false positives per hour.
 
-1. Train on normal data:
-The model learns the baseline behavior of the ICS environment using normal operational data.
-2. Feed in new observations:
-New system observations are collected from later operational periods or datasets that may contain attacks.
-3. Measure deviation from normal behavior: 
-The model evaluates how different the new observations are compared to the learned normal patterns.
-4. Generate a detection result:
-If the deviation exceeds a defined threshold, the observation is flagged as an anomaly or potentially malicious activity.
+## Threat Model
 
-## Pipeline Architecture
+The system assumes an attacker may manipulate sensor readings or actuator commands within an industrial control system. These manipulations may disrupt normal physical process behavior.
 
+The Anomaly Detection System is designed to detect such attacks by identifying abnormal patterns in sensor measurements and actuator state transitions.
+
+The attacker is assumed to:
+- Have the ability to modify control signals or sensor data
+- Attempt to remain stealthy by mimicking normal system behavior
+
+The detection system operates as an anomaly detector trained only on normal system operation.
+
+## Setup
+
+### Requirements
+
+Python 3.x with the following libraries:
+
+- pandas
+- numpy
+- scikit-learn
+- matplotlib
+- seaborn
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
-Normal ICS Data
-      │
-      ▼
-Preprocessing & Feature Extraction
-      │
-      ▼
-Train Anomaly Detection Model
-      │
-      ▼
-Incoming ICS Observations
-      │
-      ▼
-Deviation Score Calculation
-      │
-      ▼
-Normal / Anomaly Classification
-```
+## How to Run
 
-## Key Concept
+1. Clone the Repository
+      ```bash
+      git clone https://github.com/daniloebodden-gif/IDS-for-Industrial-Control-Systems.git
+      cd IDS-for-Industrial-Control-Systems
+      ```
 
-The model learns the relationships between sensors, actuators, and system states over time. By modeling these normal relationships, the system can identify inconsistencies such as abnormal sensor readings, unexpected actuator behavior, or unusual process dynamics that may indicate faults or cyberattacks.
+2. Make sure the SWaT dataset files are in the dataset directory:
+      dataset/
+            normal.csv
+            attack.csv
+
+3. Run the notebook, executing all cells to reproduce the anomaly detection pipeline and evaluation results
+      SWaT_IDS_pipeline.ipynb
+
+
+## Results
+
+Two anomaly detection models were evaluated at this time.
+
+![Model Comparison](images/results_comparison.png)
+
+The One-Class SVM Model demonstrated improved attack detection performance with significantly fewer false positives compared to the Isolation Forest Model.
+
+## Contributors
+
+Danilo Bodden
+
+## Repository Structure
+
+```text
+IDS-for-Industrial-Control-Systems
+│
+├── SWaT_IDS_pipeline.ipynb
+├── dataset/
+│ ├── normal.csv
+│ └── attack.csv
+├── images/
+│ └── results_comparison.png
+├── README.md
+├── requirements.txt
+├── anomaly_actuators.csv
+└── anomaly_sensors.csv
